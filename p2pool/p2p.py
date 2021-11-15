@@ -96,8 +96,8 @@ class Protocol(p2protocol.Protocol):
     def badPeerHappened(self):
         print "Bad peer banned:", self.addr
         self.disconnect()
-        if self.transport.getPeer().host != '127.0.0.1': # never ban localhost
-            self.node.bans[self.transport.getPeer().host] = time.time() + 60*60
+        #if self.transport.getPeer().host != '127.0.0.1': # never ban localhost
+        #    self.node.bans[self.transport.getPeer().host] = time.time() + 60*60
     
     def _timeout(self):
         self.timeout_delayed = None
@@ -804,7 +804,7 @@ class Node(object):
             raise ValueError('already have peer')
         self.peers[conn.nonce] = conn
         
-        if conn.other_sub_version.find('-c2pool.bit') != -1:
+        if conn.other_sub_version.find('-c2pool') != -1:
             conn.UpdateProtocol()
             self.updated_peers[conn.nonce] = conn
 
@@ -813,7 +813,7 @@ class Node(object):
 
     def lost_updated_conn(self, conn, reason):
         ''' потеря подключения к обновленной ноде '''
-        if conn.other_sub_version.find('-c2pool.bit') != -1:
+        if conn.other_sub_version.find('-c2pool') != -1:
             if conn.nonce not in self.updated_peers:
                 raise ValueError('''don't have peer''')
             if conn is not self.updated_peers[conn.nonce]:

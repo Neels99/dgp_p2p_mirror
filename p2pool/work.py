@@ -90,7 +90,7 @@ class WorkerBridge(worker_interface.WorkerBridge):
         
         @self.merged_work.changed.watch
         def _(new_merged_work):
-            print 'Got new merged mining work!'
+            print u'\u001B[36mGot new merged mining work!\u001B[0m'
         
         # COMBINE WORK
         
@@ -316,7 +316,7 @@ class WorkerBridge(worker_interface.WorkerBridge):
                     coinbase=(script.create_push_script([
                         self.current_work.value['height'],
                          ] + ([mm_data] if mm_data else []) + self.args.coinb_texts
-                     + ['http://c2pool.bit']) + self.current_work.value['coinbaseflags'])[:100],
+                     + ['__c2pool__']) + self.current_work.value['coinbaseflags'])[:100],
                     nonce=random.randrange(2**32),
                     pubkey_hash=pubkey_hash,
                     subsidy=self.current_work.value['subsidy'],
@@ -418,7 +418,7 @@ class WorkerBridge(worker_interface.WorkerBridge):
                     helper.submit_block(dict(header=header, txs=[new_gentx] + other_transactions), False, self.node.factory, self.node.bitcoind, self.node.bitcoind_work, self.node.net)
                     if pow_hash <= header['bits'].target:
                         print
-                        print u'\u001b[32mGOT BLOCK FROM MINER! Passing to bitcoind! %s%064x\u001B[0m' % (self.node.net.PARENT.BLOCK_EXPLORER_URL_PREFIX, header_hash)
+                        print u'\u001b[35mGOT BLOCK FROM MINER! Passing to bitcoind! %s%064x\u001B[0m' % (self.node.net.PARENT.BLOCK_EXPLORER_URL_PREFIX, header_hash)
                         print
             except:
                 log.err(None, 'Error while processing potential block:')
@@ -461,7 +461,7 @@ class WorkerBridge(worker_interface.WorkerBridge):
                 last_txout_nonce = pack.IntType(8*self.COINBASE_NONCE_LENGTH).unpack(coinbase_nonce)
                 share = get_share(header, last_txout_nonce)
                 
-                print u'\u001b[32mGOT SHARE! %s %s prev %s age %.2fs%s\u001b[0m' % (
+                print u'\u001b[33mGOT SHARE! %s %s prev %s age %.2fs%s\u001b[0m' % (
                     user,
                     p2pool_data.format_hash(share.hash),
                     p2pool_data.format_hash(share.previous_hash),
